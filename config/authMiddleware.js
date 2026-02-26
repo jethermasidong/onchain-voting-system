@@ -12,7 +12,7 @@ const auth = (req, res, next) => {
         const token = authHeader.split(' ')[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         
-        req.user = {id: decoded.id, voter_id: decoded.voter_id};
+        req.user = {id: decoded.id, voters_id: decoded.voters_id};
         next();
     } catch (err) {
         console.error('[auth] Verification Error:', err.message);

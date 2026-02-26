@@ -27,9 +27,9 @@ db.getConnection((err, connection) => {
 
 
 const createVOTERTable = `
-CREATE TABLE IF NOT EXISTS voter (
+CREATE TABLE IF NOT EXISTS voters (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    voter_id VARCHAR(255),
+    voters_id VARCHAR(255),
     name_hash TEXT,
     precinct_number INT NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS voter (
 );`;
 
 const createCANDIDATETable = `
-CREATE TABLE IF NOT EXISTS candidate (
+CREATE TABLE IF NOT EXISTS candidates (
     id INT AUTO_INCREMENT PRIMARY KEY,
     full_name VARCHAR(255),
     position VARCHAR(255),
