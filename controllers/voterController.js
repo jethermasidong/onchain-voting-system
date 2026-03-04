@@ -16,7 +16,7 @@ export const login = async (req, res) => {
         
         const voters = await getVoterByVotersId(voters_id);
         if (!voters) return res.status(404).json({message: 'Voter not found!'});
-
+        
         const isMatch = await bcrypt.compare(password, voters.password);
         if (!isMatch) return res.status(401).json({message: 'Incorrect Password'});
 
