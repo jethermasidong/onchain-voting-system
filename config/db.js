@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS voters (
     name_hash TEXT,
     precinct_number INT NOT NULL,
     password VARCHAR(255) NOT NULL,
-    status TINYINT(1) DEFAULT 0
+    status TINYINT(1) DEFAULT 0,
+    role VARCHAR(20)
 );`;
 
 const createCANDIDATETable = `

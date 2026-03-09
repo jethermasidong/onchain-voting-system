@@ -27,7 +27,8 @@ const getVoterByVotersId = async (voters_id) => {
 };
 export const login = async (req, res) => {
     try {
-        const {voters_id, password} = req.body;
+        const {voters_id, password,} = req.body;
+
         
         const voters = await getVoterByVotersId(voters_id);
         if (!voters) return res.status(404).json({message: 'Voter not found!'});
@@ -45,6 +46,7 @@ export const login = async (req, res) => {
             voters: {
                 id: voters.id,
                 voters_id: voters.voters_id,
+                role: voters.role
             },
         });
     } catch (err) {

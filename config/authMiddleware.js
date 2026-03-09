@@ -12,7 +12,8 @@ const auth = (req, res, next) => {
         const token = authHeader.split(' ')[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         
-        req.user = {id: decoded.id, voters_id: decoded.voters_id};
+        req.user = decoded;
+
         next();
     } catch (err) {
         console.error('[auth] Verification Error:', err.message);
@@ -20,4 +21,11 @@ const auth = (req, res, next) => {
     }
 };
 
-export default auth;
+const adminOnly = (req, res, next) => {
+    if (! req.user || req.user.role !== "admin") {
+        return res.status(403).json({message: "Admins only!"});
+    }
+    next ();
+}
+
+export default {auth, adminOnly};
