@@ -2,14 +2,13 @@ import express from 'express';
 import './config/db.js';
 import cors from 'cors';
 import candidateRoutes from './router/candidateRoutes.js';
-import voterRoutes from './router/voterRouter.js';
+import voterRoutes from './router/voterRoutes.js';
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use('/api', voterRoutes);
-
 app.use('/api', candidateRoutes)
 
 

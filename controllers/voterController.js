@@ -36,7 +36,7 @@ export const login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, voters.password);
         if (!isMatch) return res.status(401).json({message: 'Incorrect Password'});
 
-        const token = jwt.sign({id: voters.id, voters_id: voters.voters_id}, process.env.JWT_SECRET, {
+        const token = jwt.sign({id: voters.id, voters_id: voters.voters_id, role: voters.role}, process.env.JWT_SECRET, {
             expiresIn: '24h',
         });
 

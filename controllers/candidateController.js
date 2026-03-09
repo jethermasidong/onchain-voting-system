@@ -1,4 +1,4 @@
-import Candidates from "../models/candidateModel";
+import Candidates from "../models/candidateModel.js";
 
 
 export const insert = async (req, res) => {
