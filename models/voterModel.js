@@ -16,7 +16,7 @@ const Voters = {
             (voters_id, name_hash, precinct_number, password)
             VALUES (?, ?, ?, ?)
             `;
-        const [result] = awaitdb.promise().query(querysql, [
+        const [result] = await db.promise().query(querysql, [
             voters_id,
             name_hash,
             precinct_number,
