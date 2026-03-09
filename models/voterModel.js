@@ -8,6 +8,22 @@ const Voters = {
         );
         return rows;
     },
-};
+
+
+    insert: async (voters_id, name_hash, precinct_number, password) => {
+        const querysql = `
+            INSERT INTO voters
+            (voters_id, name_hash, precinct_number, password)
+            VALUES (?, ?, ?, ?)
+            `;
+        const [result] = awaitdb.promise().query(querysql, [
+            voters_id,
+            name_hash,
+            precinct_number,
+            password,
+        ]);
+        return result;
+    },
+}
 
 export default Voters;

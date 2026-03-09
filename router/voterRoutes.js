@@ -1,7 +1,8 @@
 import express from 'express';
-import {login} from '../controllers/voterController.js';
+import {login, insert} from '../controllers/voterController.js';
 const router = express.Router();
 
 router.post('/login', login);
+router.post('/insert', insert)
 
 export default router;

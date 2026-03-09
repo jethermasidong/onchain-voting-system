@@ -45,6 +45,20 @@ CREATE TABLE IF NOT EXISTS candidates (
     total_vote INT DEFAULT 0
 );`;
 
+const createVOTINGTable = `
+CREATE TABLE IF NOT EXISTS voting (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    voter_id INT,
+    candidate_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (voter_id) REFERENCES voters(id),
+    FOREIGN KEY (candidate_id) REFERENCES candidates(id)
+);`;
+
+db.query(createVOTINGTable, (err) => {
+    if (err) console.error('Voting Table Error!', err);
+    else console.log('Voting Table Ready!');
+})
 db.query(createVOTERTable, (err) => {
     if (err) console.error('Voter Table Error!', err);
     else console.log('Voter Table Ready');
