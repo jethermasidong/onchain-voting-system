@@ -9,9 +9,9 @@ export const insert = async (req, res) => {
         const hashedName = await bcrypt.hash(name_hash, 10);
         const hashedPassword = await bcrypt.hash(password, 10);
        
-        const newVoter = await Voters.insert(voters_id, hashedName, precinct_number, hashedPassword);
+        const result = await Voters.insert(voters_id, hashedName, precinct_number, hashedPassword);
        
-        return res.status(201).json({message: 'Voter created successfully!', voter: newVoter});
+        return res.status(201).json({message: 'Voter created successfully!', voter: result.insertId});
     } catch (err) {
         console.error("Insert Voter Error:", err);
         return res.status(500).json({message: 'Server Error!'});
