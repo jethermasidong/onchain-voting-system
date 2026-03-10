@@ -27,7 +27,7 @@ const getVoterByVotersId = async (voters_id) => {
 };
 export const login = async (req, res) => {
     try {
-        const {voters_id, password,} = req.body;
+        const {voters_id, password} = req.body;
 
         
         const voters = await getVoterByVotersId(voters_id);
