@@ -1,4 +1,5 @@
 import Voting from "../models/votingModel.js";
+import crypto from "crypto";
 
 export const displayCandidates = async (req, res) => {
     try {
@@ -26,7 +27,6 @@ export const displayCandidates = async (req, res) => {
 };
 
 
-
 export const voteCandidate = async (req, res) => {
     try {
         const {candidate_id} = req.body;
@@ -43,6 +43,8 @@ export const voteCandidate = async (req, res) => {
         await Voting.insertCandidateTally(candidate_id);
 
         await Voting.saveVotingReceipt(voter_id, candidate_id, receipt_hash);
+
+        
 
         res.status(200).json({
             success: true,

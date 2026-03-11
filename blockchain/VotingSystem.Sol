@@ -4,9 +4,11 @@ pragma solidity ^0.8.0;
 contract VotingSystem {
 
     struct Receipt {
+        uint256 voters_id;
         uint256[] candidate_id;
         string receipt_hash;
-        uint256 timestamp;
         bool exits;
     }
+
+    mapping(string => Receipt) private  receipts;
 }
