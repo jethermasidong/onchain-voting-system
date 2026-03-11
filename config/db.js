@@ -51,6 +51,8 @@ CREATE TABLE IF NOT EXISTS voting (
     id INT AUTO_INCREMENT PRIMARY KEY,
     voter_id INT,
     candidate_id INT,
+    receipt_hash VARCHAR(255),
+    tx_id VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (voter_id) REFERENCES voters(id),
     FOREIGN KEY (candidate_id) REFERENCES candidates(id)
