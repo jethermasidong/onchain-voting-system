@@ -12,7 +12,7 @@ export const displayCandidates = async (req, res) => {
                 message: `No candidates found for the position: ${position}`
             });
         }
-        res.statsus(200).json({
+        res.status(200).json({
             success: true,
             data: candidates
         });
@@ -28,5 +28,34 @@ export const displayCandidates = async (req, res) => {
 
 
 export const voteCandidate = async (req, res) => {
-    
-}
+    try {
+        const {candidate_id} = req.body;
+        const voter_id = req.user;
+
+        const receipt_hash = crypto
+            .createHash("sha256")
+            .update(`${voter_id}-${JSON.stringify(candidate_id)}-${Date.now()}`)
+            .digest("hex");
+
+
+        await Voting.markVotersAsVoted(voter_id);
+
+        await Voting.insertCandidateTally(candidate_id);
+
+        await Voting.saveVotingReceipt(voter_id, candidate_id, receipt_hash);
+
+        res.status(200).json({
+            success: true,
+            message: "Vote successfully cast in DB and Blockchain",
+            receipt_hash: receipt_hash,
+        });
+
+    } catch (error) {
+        console.error("Voting Process Failed:", error);
+        res.status(500).json({
+            success: false,
+            message: "An error occured in your voting process",
+            error: error.message
+        });
+    }
+};
