@@ -7,12 +7,26 @@ contract VotingSystem {
         uint256 voters_id;
         uint256[] candidate_id;
         string receipt_hash;
-        bool exits;
+        bool exists;
     }
 
     mapping(string => Receipt) private receipts;
 
-    function registerReceipt(uint256 voters_id, uint256[] memory candidate_id, string memory receipt_hash, string memory tx_hash) public {
-        
+    string[] public allHashes;
+
+    event ReceiptRegistered(string tx_hash, uint256 voter_id);
+
+    function registerReceipt(uint256 _voterId, uint256[] memory _candidateId, string memory _receiptHash, string memory _txHash) 
+        public {
+            require(!receipts[_txHash].exists, "Receipt already registered");
+
+            receipts[_txHash].voters_id = _voterId;
+            receipts[_txHash].candidate_id = _candidateId;
+            receipts[_txHash].receipt_hash = _receiptHash;
+            receipts[_txHash].exists = true;
+
+            allHashes.push(_txHash);
+
+            emit ReceiptRegistered(_txHash, _voterId);
     }
 }
