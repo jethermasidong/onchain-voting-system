@@ -10,5 +10,9 @@ contract VotingSystem {
         bool exits;
     }
 
-    mapping(string => Receipt) private  receipts;
+    mapping(string => Receipt) private receipts;
+
+    function registerReceipt(uint256 voters_id, uint256[] memory candidate_id, string memory receipt_hash, string memory tx_hash) public {
+        
+    }
 }
