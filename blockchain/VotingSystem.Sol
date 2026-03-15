@@ -29,4 +29,12 @@ contract VotingSystem {
 
             emit ReceiptRegistered(_txHash, _voterId);
     }
+
+    function verifyReceipt(string memory _txHash)
+        public view returns (uint256 voter_id, uint256[] memory candidate_id, string memory receipt_hash) {
+            require (receipts[_txHash].exists, "Receipt not found on blockchain.");
+
+            Receipt memory r = receipts[_txHash];
+            return (r.voters_id, r.candidate_id, r.receipt_hash);
+        }
 }
