@@ -44,7 +44,6 @@ export const voteCandidate = async (req, res) => {
 
         await Voting.saveVotingReceipt(voter_id, candidate_id, receipt_hash);
 
-        
 
         res.status(200).json({
             success: true,
