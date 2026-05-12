@@ -8,7 +8,7 @@ export const insert = async (req, res) => {
         const {voters_id, name_hash, precinct_number, password} = req.body;
         const hashedName = await bcrypt.hash(name_hash, 10);
         const hashedPassword = await bcrypt.hash(password, 10);
-       
+        
         const result = await Voters.insert(voters_id, hashedName, precinct_number, hashedPassword);
        
         return res.status(201).json({message: 'Voter created successfully!', voter: result.insertId});
@@ -25,6 +25,9 @@ const getVoterByVotersId = async (voters_id) => {
     const result = await Voters.getByVotersId(voters_id);
     return result[0] || null;
 };
+
+
+
 export const login = async (req, res) => {
     try {
         const {voters_id, password} = req.body;

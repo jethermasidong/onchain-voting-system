@@ -60,3 +60,11 @@ export const voteCandidate = async (req, res) => {
         });
     }
 };
+
+export const verifyReceipt = async (req, res) => {
+    try {
+
+    } catch {
+        
+    }
+}

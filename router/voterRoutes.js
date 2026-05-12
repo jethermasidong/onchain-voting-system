@@ -5,7 +5,7 @@ import { displayCandidates } from '../controllers/votingController.js';
 const router = express.Router();
 
 router.post('/login', login);
-router.post('/insert-voter', auth, adminOnly, insert);
+router.post('/insert-voter', insert);
 router.post('/candidates', auth, displayCandidates);
 
 export default router;

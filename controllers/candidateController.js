@@ -3,8 +3,8 @@ import Candidates from "../models/candidateModel.js";
 
 export const insert = async (req, res) => {
     try {
-        const {full_name, position, partylist} = req.body;
-        const result = await Candidates.insert(full_name, position, partylist);
+        const {first_name, last_name, position, partylist} = req.body;
+        const result = await Candidates.insert(first_name, last_name, position, partylist);
         
         return res.status(201).json({message: 'Candidate create successfully', candidate: result.insertId});
     

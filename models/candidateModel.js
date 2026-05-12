@@ -3,14 +3,15 @@ import db from "../config/db.js";
 
 const Candidates = {
     
-    insert: async (full_name, position, partylist) => {
+    insert: async (first_name, last_name, position, partylist) => {
         const querysql = `
             INSERT INTO candidates 
-            (full_name, position, partylist)
-            VALUES (?, ?, ?)
+            (first_name, last_name, position, partylist)
+            VALUES (?, ?, ?, ?)
             `;
         const [result] = await db.promise().query(querysql, [
-            full_name,
+            first_name,
+            last_name,
             position,
             partylist,
         ]);

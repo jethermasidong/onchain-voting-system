@@ -8,7 +8,7 @@ const db = mysql.createPool({
     user: process.env.USER,
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
-    port: 24186,
+    port: 43083,
     waitForConnections: true,
     connectionLimit: 100,
     ssl: {
@@ -40,7 +40,8 @@ CREATE TABLE IF NOT EXISTS voters (
 const createCANDIDATETable = `
 CREATE TABLE IF NOT EXISTS candidates (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    full_name VARCHAR(255),
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
     position VARCHAR(255),
     partylist VARCHAR(255),
     total_vote INT DEFAULT 0
