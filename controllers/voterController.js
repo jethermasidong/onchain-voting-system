@@ -21,11 +21,22 @@ export const insert = async (req, res) => {
 
 
 
-const getVoterByVotersId = async (voters_id) => {
+export const getVoterByVotersId = async (voters_id) => {
     const result = await Voters.getByVotersId(voters_id);
     return result[0] || null;
 };
 
+
+export const getAllVoters = async (req, res) => {
+    try {
+        const result = await Voters.getAllVoters();
+
+        return res.status(201).json(result);
+    } catch(err) {
+        console.error(err);
+        return res.status(500).json({message: 'Cannot get Voters!'});
+    }
+}
 
 
 export const login = async (req, res) => {
@@ -59,4 +70,4 @@ export const login = async (req, res) => {
 };
 
 
-export default {login, insert};
+export default {login, insert, getAllVoters};

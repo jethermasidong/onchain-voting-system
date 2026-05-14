@@ -10,6 +10,14 @@ const Voters = {
     },
 
 
+    getAllVoters: async () => {
+        const [rows] = await db.promise().query(
+            "SELECT * FROM voters"
+        );
+        return rows;
+    },
+
+
     insert: async (voters_id, name_hash, precinct_number, password) => {
         const querysql = `
             INSERT INTO voters
