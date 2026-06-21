@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 export const insert = async (req, res) => {
     try {
         const {voters_id, name_hash, precinct_number, password} = req.body;
+
         const hashedName = await bcrypt.hash(name_hash, 10);
         const hashedPassword = await bcrypt.hash(password, 10);
         
@@ -16,8 +17,43 @@ export const insert = async (req, res) => {
         console.error("Insert Voter Error:", err);
         return res.status(500).json({message: 'Server Error!'});
     }
+};
+
+export const editVoters = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {voters_id, name_hash, precinct_number, password} = req.body;
+
+        const hashedName = await bcrypt.hash(name_hash, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const result = await Voters.editVoters(id, voters_id, hashedName, precinct_number, hashedPassword);
+
+        return res.status(200).json({
+            message: 'Voter Updated Successfully!',
+            changedRows: result.changedRows
+        });
+    } catch(err) {
+        console.error("Update Voter Error:", err);
+        return res.status(500).json({ message: 'Server Error!' });
+    }
 }
 
+
+
+export const deleteVoters = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await Voters.deleteVoters(id);
+        return res.status(200).json({
+            message: 'Voter Deleted Successfully!',
+            affectedRows: result.affectedRows
+        });
+    } catch(err) {
+        console.error(err);
+        return res.status(500).json({message: 'Delete Failed!'});
+    }
+};
 
 
 
@@ -36,7 +72,8 @@ export const getAllVoters = async (req, res) => {
         console.error(err);
         return res.status(500).json({message: 'Cannot get Voters!'});
     }
-}
+};
+
 
 
 export const login = async (req, res) => {
@@ -70,4 +107,4 @@ export const login = async (req, res) => {
 };
 
 
-export default {login, insert, getAllVoters};
+export default {login, insert, getAllVoters, editVoters, deleteVoters};

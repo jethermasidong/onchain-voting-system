@@ -17,6 +17,13 @@ const Candidates = {
         ]);
         return result;
     },
+
+    getAllCandidates: async () => {
+        const [rows] = await db.promise().query(
+            "SELECT * FROM candidates"
+        );
+        return rows;
+    },
 }
 
 export default Candidates;

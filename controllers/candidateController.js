@@ -15,4 +15,15 @@ export const insert = async (req, res) => {
 }
 
 
-export default insert;
+export const getAllCandidates = async (req, res) => {
+    try {
+        const result = await Candidates.getAllCandidates();
+
+        return res.status(201).json(result);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Cannot get Candidates"});
+    }
+}
+
+export default {insert, getAllCandidates};
