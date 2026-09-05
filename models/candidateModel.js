@@ -7,19 +7,20 @@ const Candidates = {
         const querysql = `
             INSERT INTO candidates 
             (first_name, last_name, position, partylist)
-            VALUES (?, ?, ?, ?)
+            VALUES ($1, $2, $3, $4)
+            RETURNING *;
             `;
-        const [result] = await db.promise().query(querysql, [
+        const result = await db.query(querysql, [
             first_name,
             last_name,
             position,
             partylist,
         ]);
-        return result;
+        return result.rows[0];
     },
 
     getAllCandidates: async () => {
-        const [rows] = await db.promise().query(
+        const rows = await db.query(
             "SELECT * FROM candidates"
         );
         return rows;

@@ -1,45 +1,39 @@
+import pg from 'pg';
 import dotenv  from "dotenv";
 dotenv.config();
-import mysql from 'mysql2';
 
 
-const db = mysql.createPool({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
-    port: process.env.PORT,
-    waitForConnections: true,
-    connectionLimit: 100,
+const { Pool } = pg;
+
+const db = new Pool({
+    connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false,
     },
 });
 
-db.getConnection((err, connection) => {
-    if (err) {
-        console.error('Database Connection Error!', err);
-    } else {
-        console.log('Database Connected!');
-        connection.release();
-    }
-});
+db.query("SELECT NOW()")
+    .then(result => {
+        console.log("Database Connected");
+        console.log(result.rows[0]);
+    })
+    .catch(err => console.log(err));
 
 
 const createVOTERTable = `
 CREATE TABLE IF NOT EXISTS voters (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     voters_id VARCHAR(255),
     name_hash TEXT,
     precinct_number INT NOT NULL,
     password VARCHAR(255) NOT NULL,
-    status TINYINT(1) DEFAULT 0,
+    status SMALLINT DEFAULT 0,
     role VARCHAR(20)
 );`;
 
 const createCANDIDATETable = `
 CREATE TABLE IF NOT EXISTS candidates (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     first_name VARCHAR(255),
     last_name VARCHAR(255),
     position VARCHAR(255),
@@ -49,7 +43,7 @@ CREATE TABLE IF NOT EXISTS candidates (
 
 const createVOTINGTable = `
 CREATE TABLE IF NOT EXISTS voting (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     voter_id INT,
     candidate_id INT,
     receipt_hash VARCHAR(255),
@@ -59,10 +53,6 @@ CREATE TABLE IF NOT EXISTS voting (
     FOREIGN KEY (candidate_id) REFERENCES candidates(id)
 );`;
 
-db.query(createVOTINGTable, (err) => {
-    if (err) console.error('Voting Table Error!', err);
-    else console.log('Voting Table Ready!');
-})
 db.query(createVOTERTable, (err) => {
     if (err) console.error('Voter Table Error!', err);
     else console.log('Voter Table Ready');
@@ -72,5 +62,10 @@ db.query(createCANDIDATETable, (err) => {
     if (err) console.error('Candidate Table Error', err);
     else console.log('Candidate Table Ready!');
 });
+
+db.query(createVOTINGTable, (err) => {
+    if (err) console.error('Voting Table Error!', err);
+    else console.log('Voting Table Ready!');
+})
 
 export default db;

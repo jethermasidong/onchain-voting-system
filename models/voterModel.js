@@ -1,41 +1,40 @@
 import db from "../config/db.js";
-import { deleteVoters } from "../controllers/voterController.js";
 
 const Voters = {
 
     getByVotersId: async (voters_id) => {
-        const [rows] = await db.promise().query(
-            "SELECT * FROM voters WHERE voters_id = ?", [voters_id]
+        const result = await db.query(
+            "SELECT * FROM voters WHERE voters_id = $1", [voters_id]
         );
-        return rows;
+        return result.rows[0];
     },
 
 
     getAllVoters: async () => {
-        const [rows] = await db.promise().query(
+        const results = await db.query(
             "SELECT * FROM voters"
         );
-        return rows;
+        return results.rows;
     },
 
     deleteVoters: async (id) => {
-        const [rows] = await db.promise().query(
-            "DELETE FROM voters WHERE id = ?", [id]
+        const result = await db.query(
+            "DELETE FROM voters WHERE id = $1", [id]
         );
-        return rows;
+        return result.rows[0];
     },
 
 
     editVoters: async (id, voters_id, name_hash, precinct_number, password) => {
-        const query = `UPDATE voters SET voters_id = ?, name_hash = ?, precinct_number = ?, password = ? WHERE id = ?`;
-        const [result] = await db.promise().query(query, [
+        const query = `UPDATE voters SET voters_id = $1, name_hash = $2, precinct_number = $3 , password = $4 WHERE id = $5`;
+        const result = await db.query(query, [
             voters_id,
             name_hash,
             precinct_number,
             password,
             id,
         ]);
-        return result;
+        return result.rows[0];
     },
 
 
@@ -44,16 +43,17 @@ const Voters = {
         const querysql = `
             INSERT INTO voters
             (voters_id, name_hash, precinct_number, password, role)
-            VALUES (?, ?, ?, ?, ?)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING *;
             `;
-        const [result] = await db.promise().query(querysql, [
+        const result = await db.query(querysql, [
             voters_id,
             name_hash,
             precinct_number,
             password,
             "voter"
         ]);
-        return result;
+        return result.rows[0];
     },
 }
 

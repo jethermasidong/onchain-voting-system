@@ -1,1 +1,1 @@
-![BARG gameplay preview](public/iboto.png)
+![PROTEKBOTO preview](public/protekboto.png)

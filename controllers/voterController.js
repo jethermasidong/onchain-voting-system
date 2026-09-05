@@ -59,7 +59,7 @@ export const deleteVoters = async (req, res) => {
 
 export const getVoterByVotersId = async (voters_id) => {
     const result = await Voters.getByVotersId(voters_id);
-    return result[0] || null;
+    return result || null;
 };
 
 
@@ -79,6 +79,12 @@ export const getAllVoters = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const {voters_id, password} = req.body;
+
+        if (!voters_id || !password) {
+            return res.status(400).json({
+                message: "Voters ID and Password are required!"
+            })
+        }
 
         
         const voters = await getVoterByVotersId(voters_id);
