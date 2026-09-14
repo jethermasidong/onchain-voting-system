@@ -5,10 +5,12 @@ import { displayCandidates } from '../controllers/votingController.js';
 const router = express.Router();
 
 router.post('/login', login);
-router.post('/insert-voter', insert);
-router.post('/candidates-voting', auth, displayCandidates);
+router.post('/voters', insert);
+
+router.post('/voting', auth, displayCandidates); //
+
 router.get('/voters', auth, getAllVoters);
-router.put('/voters/edit/:id', auth, editVoters);
+router.put('/voters/:id', auth, editVoters);
 router.delete('/voters/:id', auth, deleteVoters);
 
 export default router; 

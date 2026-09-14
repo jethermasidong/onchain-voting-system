@@ -33,7 +33,7 @@ export const editVoters = async (req, res) => {
             message: 'Voter Updated Successfully!',
             changedRows: result.changedRows
         });
-    } catch(err) {
+    } catch (err) {
         console.error("Update Voter Error:", err);
         return res.status(500).json({ message: 'Server Error!' });
     }
@@ -49,7 +49,7 @@ export const deleteVoters = async (req, res) => {
             message: 'Voter Deleted Successfully!',
             affectedRows: result.affectedRows
         });
-    } catch(err) {
+    } catch (err) {
         console.error(err);
         return res.status(500).json({message: 'Delete Failed!'});
     }
@@ -68,7 +68,7 @@ export const getAllVoters = async (req, res) => {
         const result = await Voters.getAllVoters();
 
         return res.status(201).json(result);
-    } catch(err) {
+    } catch (err) {
         console.error(err);
         return res.status(500).json({message: 'Cannot get Voters!'});
     }
