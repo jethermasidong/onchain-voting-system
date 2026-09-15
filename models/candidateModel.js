@@ -28,6 +28,7 @@ const Candidates = {
                 candidates.last_name,
                 candidates.partylist,
                 candidates.total_vote,
+                candidates.ballot_number,
                 positions.id AS position_id,
                 positions.position_name,
                 positions."order",
