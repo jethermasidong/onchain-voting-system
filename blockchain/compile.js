@@ -5,7 +5,6 @@ import path from "path";
 const contractPath = path.resolve("VotingSystem.sol");
 const source = fs.readFileSync(contractPath, "utf8");
 
-//Compile Smart Contract
 const input = {
   language: "Solidity",
   sources: {

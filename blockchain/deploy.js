@@ -16,7 +16,6 @@ const abi = JSON.parse(fs.readFileSync("./VotingSystemABI.json", "utf8"));
 const bytecode = fs.readFileSync("./VotingSystemBytecode.json", "utf8");
 
 
-//Deploy Smart Contract On Chain
 async function main() {
   const provider = new ethers.JsonRpcProvider(RPC_URL);
   const wallet = new ethers.Wallet(PRIVATE_KEY, provider);

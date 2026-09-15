@@ -1,40 +1,53 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
-contract VotingSystem {
+contract ProtekbotoElection {
+    
+    address public admin;
 
-    struct Receipt {
-        uint256 voters_id;
-        uint256[] candidate_id;
-        string receipt_hash;
-        bool exists;
+    mapping(uint256 => bool) public candidateExists;
+
+    mapping(uint256 => uint256) public voteCounts;
+
+    mapping(bytes32 => bool) public hasVotedHash;
+
+    event VoteCast(uint256 indexed candidateId, uint256 timestamp); 
+    event CandidateRegistered(uint256 indexed candidateId);
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Caller is not the admin");
+        _;
     }
 
-    mapping(string => Receipt) private receipts;
-
-    string[] public allHashes;
-
-    event ReceiptRegistered(string tx_hash, uint256 voter_id);
-
-    function registerReceipt(uint256 _voterId, uint256[] memory _candidateId, string memory _receiptHash, string memory _txHash) 
-        public {
-            require(!receipts[_txHash].exists, "Receipt already registered");
-
-            receipts[_txHash].voters_id = _voterId;
-            receipts[_txHash].candidate_id = _candidateId;
-            receipts[_txHash].receipt_hash = _receiptHash;
-            receipts[_txHash].exists = true;
-
-            allHashes.push(_txHash);
-
-            emit ReceiptRegistered(_txHash, _voterId);
+    constructor() {
+        admin = msg.sender;
     }
 
-    function verifyReceipt(string memory _txHash)
-        public view returns (uint256 voter_id, uint256[] memory candidate_id, string memory receipt_hash) {
-            require (receipts[_txHash].exists, "Receipt not found on blockchain.");
 
-            Receipt memory r = receipts[_txHash];
-            return (r.voters_id, r.candidate_id, r.receipt_hash);
+    function addCandidate(uint256 _id) external onlyAdmin {
+        require(!candidateExists[_id], "Candidate already registered");
+        candidateExists[_id] = true;
+        emit CandidateRegistered(_id);
+    }
+
+    function castVote(bytes32 _voterHash, uint256[] calldata _candidateIds) external {
+        require(!hasVotedHash[_voterHash], "Credentials already used to cast a ballot");
+        require(_candidateIds.length > 0, "Must select atleast one candidate");
+
+        hasVotedHash[_voterHash] = true;
+
+        for (uint256 i = 0; i < _candidateIds.length; i++) {
+            uint256 candidateId = _candidateIds[i];
+            require(candidateExists[candidateId], "Invalid candidate ID");
+
+            voteCounts[candidateId]++;
+
+            emit VoteCast(candidateId, block.timestamp);
         }
+    }
+
+    function getCandidateVotes(uint256 _candidateId) external view returns (uint256) {
+        require(candidateExists[_candidateId], "Candidate does not exist");
+        return voteCounts[_candidateId];
+    }
 }
