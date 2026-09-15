@@ -1,48 +1,41 @@
 import Voting from "../models/votingModel.js";
 import crypto from "crypto";
+import { castVote } from "../on-chain/castVote.js";
 
-export const displayCandidates = async (req, res) => {
+
+export const castVote = async (req, res) => {
     try {
-        const { position } = req.params;
 
-        const candidates = await Voting.getByCandidatesPosition(position);
+        const { voter_id } = req.user.id;
 
-        if (candidates.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: `No candidates found for the position: ${position}`
-            });
+        if (!voter_id || voter_id.length === 0) {
+            return res.status(400).json({ error: "Unauthorized voter session!"})
         }
-        res.status(200).json({
-            success: true,
-            data: candidates
-        });
-    } catch (error) {
-        console.error("Error fetching candidates", error);
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-        });
-    }
-};
 
+        const { candidateIds } = req.body;
 
-export const voteCandidate = async (req, res) => {
-    try {
-        const {candidate_id} = req.body;
-        const voter_id = req.user;
+        if (!candidateIds || candidateIds.length === 0) {
+            return res.status(400).json({ error: "No candidates selected!" });
+        }
+
+        const voters_hash = ethers.id(voter_id.toString());
 
         const receipt_hash = crypto
             .createHash("sha256")
-            .update(`${voter_id}-${JSON.stringify(candidate_id)}-${Date.now()}`)
+            .update(`${voter_id}-${JSON.stringify(candidateIds)}-${Date.now()}`)
             .digest("hex");
 
+        const isEligible = await contract.verifyEligibility(voters_hash);
 
-        await Voting.markVotersAsVoted(voter_id);
+        if (!isEligible) {
+            throw new Error("Invalid Blockchain Response");
+        };
 
-        await Voting.insertCandidateTally(candidate_id);
+        castVote(candidateIds, transaction_hash, block_number, voters_hash)
 
-        await Voting.saveVotingReceipt(voter_id, candidate_id, receipt_hash);
+        await Voting.insertCandidateTally(candidateIds);
+
+        await Voting.recordVoting( candidateIds, transaction_hash, block_number);
 
 
         res.status(200).json({
@@ -60,11 +53,3 @@ export const voteCandidate = async (req, res) => {
         });
     }
 };
-
-export const verifyReceipt = async (req, res) => {
-    try {
-
-    } catch {
-        
-    }
-}
