@@ -1,14 +1,18 @@
 import fs from "fs";
 import solc from "solc";
 import path from "path";
+import { fileURLToPath } from "url";
 
-const contractPath = path.resolve("VotingSystem.sol");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const contractPath = path.resolve(__dirname, "VotingSystem.sol");
 const source = fs.readFileSync(contractPath, "utf8");
 
 const input = {
   language: "Solidity",
   sources: {
-    "ProductRegistry.sol": { content: source }
+    "VotingSystem.sol": { content: source }
   },
   settings: {
     outputSelection: {
