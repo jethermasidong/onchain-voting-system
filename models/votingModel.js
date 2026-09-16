@@ -1,23 +1,40 @@
+import { Transaction } from "ethers";
 import db from "../config/db.js";
 
 
 const Voting = {
 
-    markVotersAsVoted: async (voter_id) => {
-        const result = await db.query(
-            "UPDATE voters SET has_voted = 1 WHERE id = $1", [voter_id]
-        );
-        return result.rows;
-    },
-
-    insertCandidateTally: async (id) => {
-        const result = await db.query(
-            "UPDATE candidates SET total_votes = total_votes + 1 WHERE id IN ($1)", [id]
-        );
+    recordVoting: async (candidateIds, transaction_hash, block_number) => {
+        
+        const query = `
+            INSERT INTO voting 
+            (candidate_id, transaction_number, block_number)
+            VALUES ($1, $2, $3)
+            RETURNING *;
+        `;
+        
+        const result = await db.query(query, [candidateIds, transaction_hash, block_number]);
         return result.rows[0];
     },
 
+    insertCandidateTally: async (candidateIds) => {
 
+        updatedCandidates = [];
+
+        for (const candidate_id of candidateIds) {
+            const query = `
+                UPDATE candidates
+                SET total_vote = total + 1
+                WHERE id = $1
+                RETURNING *;
+            `;
+            const result = await db.query(query, [candidate_id]);
+            if (result.rows.length > 0) {
+                updatedCandidates.push(result.rows[0]);
+            }
+        }
+        return updatedCandidates;
+    }
 }
 
 export default Voting;  
